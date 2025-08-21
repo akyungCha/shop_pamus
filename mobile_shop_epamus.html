@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>주문서 작성 - 상단</title>
+
+  <style>
+
+    /* ========== 기본 ========== */
+    :root { 
+      --border:#e9ecef; 
+      --text:#16181b; 
+      --sub:#6b7280; 
+      --accent:#ef4444;
+      --bg:#fff; 
+    }
+
+    *{box-sizing:border-box} body {
+      margin:0;
+      background:#f7f8fa;
+      color:var(--text);
+      font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans KR',sans-serif}
+
+    .container{
+      max-width:480px;
+      margin:0 auto;
+      padding:12px 12px 24px
+    }
+
+    /* ========== Card ========== */
+    .card{
+      background:var(--bg);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.04)
+    }
+
+    .section-title{
+      font-weight:700;
+      font-size:16px;
+      margin:6px 0 10px
+    }
+
+    /* ========== 대표상품 보여주기========= */
+    .rep-product{
+      display:flex;
+      gap:12px;
+      align-items:center
+    }
+
+    .thumb{width:56px;
+      height:56px;
+      border-radius:8px;
+      overflow:hidden;
+      flex:0 0 auto;
+      background:#eee
+    }
+
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover
+    }
+
+    .item-info{flex:1 1 auto;
+      min-width:0
+    }
+
+    .sod_opt{
+      display:block;
+      font-weight:600;
+      font-size:15px;
+      line-height:1.25;
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis
+    }
+
+    .meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      font-size:12px;
+      color:var(--sub)
+    }
+    .td_num::before{
+      content:"수량: "
+    }
+    .td_numbig::before{
+      content:"가격: "
+    }
+  
+
+    /* ========== 전체 상품 보기 버튼 ========== */
+    #additional-products{
+      width:100%;
+      margin-top:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:10px;
+      padding:10px 12px;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      cursor:pointer}
+
+    #additional-products .caret{
+      transition:.2s transform
+    }
+    #additional-products[aria-expanded="true"] 
+
+    .caret{
+      transform:rotate(180deg)
+    }
+
+    /* ========== 전체 상품 리스트========== */
+    .list-wrap{
+      margin-top:8px;
+      display:none
+    }
+    .product-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 0;
+      border-top:1px dashed var(--border)
+    }
+    .product-row:first-child{
+      border-top:none
+    }
+    .product-row .thumb{
+      width:46px;
+      height:46px;
+      border-radius:8px
+    }
+    .product-row .sod_opt{
+      font-size:14px;
+      margin:0 0 2px
+    }
+    .product-row .meta{
+      font-size:12px
+    }
+
+    /* ========== 총 주문금액 ========== */
+    .total-card{
+      margin-top:12px
+    }
+
+    .total-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between
+      
+    }
+
+    .total-row label{
+      font-size:14px;
+      color:var(--sub)
+    }
+    .total_amount{
+      font-weight:800;
+      font-size:18px;
+      color:var(--accent)
+    }
+    
+/* 공통 */
+.order-page { 
+  --border:#e9ecef; 
+  --sub:#6b7280; 
+  --accent:#ef4444; 
+}
+
+/* 카드 */
+.order-page .card-like{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-top: 12px;
+  padding:12px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+
+/* 주문자 정보(타이틀) */
+.order-page .card-like .title{
+  font-size:16px; 
+  font-weight:700; 
+  margin:4px 0 16px;
+}
+
+/* 라벨/인풋 공통 */
+.order-page .label{
+  display:block;
+  font-size:14px;
+  font-weight:500;
+  color:var(--sub);
+  margin-bottom:6px;
+}
+.order-page .input, .order-page .btn{
+  width:100%; 
+  min-height:42px; 
+  font-size:14px; 
+  border-radius:10px;
+  border:1px solid var(--border); 
+  background:#fff; 
+  padding:10px 12px;
+}
+
+.order-page .btn{
+  cursor:pointer;
+}
+.order-page .btn-primary{
+  background:#e11d2e;
+  color:#fff;
+  border-color:#e11d2e;
+}
+.order-page .input[disabled]{
+  background:#f2f3f5;color:#9aa0a6;
+}
+
+.order-page .frm-grid{
+  display:grid; 
+  gap:10px;
+}
+.order-page .row-inline{
+  display:flex; 
+  gap:8px; 
+  align-items:center;
+}
+.order-page .row-inline .input{
+  flex:1;
+}
+.order-page .row-inline .btn{
+  flex:0 0 auto; 
+  width:auto;
+  padding:0 16px;
+  min-width:100px; 
+}
+
+
+/* 배송지 타입 카드 ui */
+.order-page .addr-types{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.order-page .addr-type {
+  position:relative;
+  flex:1;padding:12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  text-align:center;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:center;
+  justify-content:center;
+  min-height:82px;
+}
+
+.order-page .addr-type input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  cursor:pointer;
+}
+.order-page .addr-type .title{
+  font-weight:700;
+  font-size:14px;
+  color:#16181b;}
+
+.order-page .addr-type .sub{
+  font-size:12px;
+  color:var(--sub);
+}
+.order-page .addr-type:has(input:checked){
+  border-color:#e11d2e; 
+  box-shadow:0 0 0 2px rgba(225,29,46,.10);
+}
+
+.order-page .addr-type {
+
+}
+
+/* 라디오 마크 */
+.order-page .addr-type .radio-mark{
+  width:20px; height:20px;
+  border:2px solid var(--border);
+  border-radius:50%;
+  display:inline-block;
+}
+
+/* 선택 상태 표시 */
+.order-page .addr-type:has(input:checked) .radio-mark{
+  border-color:#e11d2e;
+  box-shadow: inset 0 0 0 5px #e11d2e; 
+}
+
+/* 선택 시 카드 하이라이트 */
+.order-page .addr-type:has(input:checked){
+  border-color:#e11d2e;
+  box-shadow:0 0 0 2px rgba(225,29,46,.10);
+}
+
+.td_total {
+  font-weight: 700;
+  color: #e11d2e; 
+  margin-left: auto;
+}
+
+
+/* 여기서 부터는 크레딧 스타일입니당 */
+
+.credit_section {
+  margin-top:12px;
+  padding:16px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  background:#fff;
+}
+.credit_section .title {
+  font-weight:700;
+  margin-bottom:12px;
+  font-size:15px;
+}
+
+.credit_item {
+  margin-bottom:16px;
+}
+.credit_header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:14px;
+  margin-bottom:6px;
+}
+.credit_balance {
+  color:#666;
+  margin-left: auto; 
+  font-size: 12px; 
+}
+.credit_input_area input {
+  width:100%;
+  padding:8px;
+  border:1px solid #ddd;
+  border-radius:8px;
+}
+.credit_options {
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.credit_notice {
+  font-size:12px;
+  color:#666;
+  display: flex;
+   align-items: center;
+
+  /* 여기서 부터는 결제 요약 스타일입니당 */
+}
+
+.payment-summary {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  background: #fafafa;
+}
+
+.summary-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #555;
+  font-size: 14px;
+}
+
+.summary-final {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 12px;
+  color: #e11d2e;
+}
+
+/* 결제 수단 선택 */
+.payment-method {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fafafa;
+}
+
+.payment-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.payment-card {
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.payment-card input {
+  display: none;
+}
+
+.payment-card .card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.payment-card .icon {
+  font-size: 28px;
+}
+
+.payment-card:hover {
+  border-color: #007bff;
+}
+
+.payment-card input:checked + .card-content {
+  border: 2px solid #007bff;
+  background-color: #f0f8ff; 
+}
+
+
+/* 푸터 고정시키기 */
+
+.payment-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+  z-index: 1000;
+}
+
+.footer-summary {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.footer-final {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e60000; 
+  margin-left: 8px;
+}
+
+.btn-pay {
+  background: #e60000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-pay:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/*푸터 반응형 고려하기*/
+:root{
+  --footer-h: clamp(64px, 12vw, 92px);       
+  --footer-pad-y: 12px;                   
+}
+
+/* 하단 결제 바 */
+.payment-footer{
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1000;
+  min-height: var(--footer-h);
+  padding: var(--footer-pad-y) 16px calc(var(--footer-pad-y) + env(safe-area-inset-bottom));
+  display: flex; align-items: center; justify-content: space-between;
+  background: #fff; border-top: 1px solid #e9ecef;
+  box-shadow: 0 -2px 6px rgba(0,0,0,.05);
+}
+
+body{
+  padding-bottom: calc(var(--footer-h) + var(--footer-pad-y) + env(safe-area-inset-bottom));
+}
+
+/* 초소형 보정 */
+@media (max-width:360px){
+  .order-page .input, .order-page .btn{min-height:40px;font-size:13.5px}
+}
+
+  </style>
+</head>
+
+<body>
+  
+  <div class="container">
+
+    <!-- 주문 상품 (상단 대표상품) -->
+    <div class="card">
+      <div class="section-title">주문 상품</div>
+
+      <!-- 대표상품 -->
+      <div class="rep-product">
+        <div class="thumb">
+          <img src="resource/구문비1.png"대표상품 썸네일">
+        </div>
+        <div class="item-info">
+          <span class="sod_opt">구문비 Vol.1</span>
+          <div class="meta">
+            <span class="td_num">1개</span>
+            <span class="td_numbig">19,000원</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 전체 상품 보기 (토글 버튼) -->
+      <button id="additional-products" type="button" aria-expanded="false" aria-controls="all-products">
+        <span>전체 상품 보기</span>
+        <span class="caret">▼</span>
+      </button>
+
+      <!-- 전체 상품 리스트(드롭다운 영역) -->
+      <div id="all-products" class="list-wrap" role="region" aria-label="주문한 전체 상품 목록">
+        <!-- 아이템 1 -->
+        <div class="product-row">
+          <div class="thumb">
+            <img src="resource/구문비1.png" alt="구문비 Vol.1">
+          </div>
+          <div class="item-info">
+            <span class="sod_opt">구문비 Vol.1</span>
+            <div class="meta">
+              <span class="td_num">1개</span>
+              <span class="td_numbig">19,000원</span>
+              <span class="td_total"></span>
+            </div>
+          </div>
+        </div>
+        <!-- 아이템 2 -->
+        <div class="product-row">
+          <div class="thumb">
+            <img src="resource/구문비2.png" alt="구문비 Vol.2">
+          </div>
+          <div class="item-info">
+            <span class="sod_opt">구문비 Vol.2</span>
+            <div class="meta">
+              <span class="td_num">2개</span>
+              <span class="td_numbig">19,000원</span>
+              <span class="td_total"></span>
+            </div>
+          </div>
+        </div>
+        <!-- 아이템 3 -->
+        <div class="product-row">
+          <div class="thumb">
+            <img src="resource/구문비3.png" alt="구문비 Vol.3">
+          </div>
+          <div class="item-info">
+            <span class="sod_opt">구문비 Vol.3</span>
+            <div class="meta">
+              <span class="td_num">1개</span>
+              <span class="td_numbig">19,000원</span>
+              <span class="td_total"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 총 주문금액 -->
+    <div class="card total-card">
+      <div class="total-row">
+        <label>총 주문금액</label>
+        <div class="total_amount">0원</div>
+      </div>
+    </div>
+
+<!-- 주문자 정보 -->
+<section id="sod_frm_orderer" class="tbl_frm01 tbl_wrap order-page">
+  <div class="card-like">
+    <div class="title">주문자 정보</div>
+
+    <div class="frm-grid">
+      <!-- 이름 (필수) -->
+      <div>
+        <label for="orderer_name" class="label">이름 *</label>
+        <input id="orderer_name" name="orderer_name" class="input" type="text" required>
+      </div>
+
+      <!-- 전화번호 (선택) -->
+      <div>
+        <label for="orderer_tel" class="label">전화번호</label>
+        <input id="orderer_tel" name="orderer_tel" class="input" type="tel" placeholder="예) 02-1234-5678">
+      </div>
+
+      <!-- 핸드폰 (필수) -->
+      <div>
+        <label for="orderer_hp" class="label">핸드폰 *</label>
+        <input id="orderer_hp" name="orderer_hp" class="input" type="tel" required>
+      </div>
+
+      <!-- 주소 -->
+      <div>
+        <label class="label">주소 *</label>
+        <div class="row-inline">
+          <input id="orderer_zip" name="orderer_zip" class="input" type="text" placeholder="우편번호" required>
+          <button type="button" class="btn btn-primary" id="btn-find-zip">주소 검색</button>
+        </div>
+        <input id="orderer_addr1" name="orderer_addr1" class="input" type="text" placeholder="기본주소" required style="margin-top:8px;">
+        <input id="orderer_addr2" name="orderer_addr2" class="input" type="text" placeholder="상세주소 (예: 14층)" style="margin-top:8px;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 배송지 정보 -->
+<section id="sod_frm_orderer" class="tbl_frm01 tbl_wrap order-page">
+  <div class="card-like">
+    <div class="title">배송지 정보</div>
+<!-- 배송지 선택 라디오 카드 -->
+<div class="addr-types" role="radiogroup" aria-label="배송지 선택">
+  <label class="addr-type">
+    <input type="radio" name="shipType" value="same" checked>
+    <span class="radio-mark" aria-hidden="true"></span>
+    <span class="title">주문자와 동일</span>
+  </label>
+
+  <label class="addr-type">
+    <input type="radio" name="shipType" value="recent">
+    <span class="radio-mark" aria-hidden="true"></span>
+    <span class="title">최근 배송지</span>
+  </label>
+
+  <label class="addr-type">
+    <input type="radio" name="shipType" value="new">
+    <span class="radio-mark" aria-hidden="true"></span>
+    <span class="title">새로 입력</span>
+  </label>
+</div>
+    <div class="frm-grid">
+      <!-- 이름 (필수) -->
+      <div>
+        <label for="orderer_name" class="label">이름 *</label>
+        <input id="orderer_name" name="orderer_name" class="input" type="text" required>
+      </div>
+
+      <!-- 전화번호 (선택) -->
+      <div>
+        <label for="orderer_tel" class="label">전화번호</label>
+        <input id="orderer_tel" name="orderer_tel" class="input" type="tel" placeholder="예) 02-1234-5678">
+      </div>
+
+      <!-- 핸드폰 (필수) -->
+      <div>
+        <label for="orderer_hp" class="label">핸드폰 *</label>
+        <input id="orderer_hp" name="orderer_hp" class="input" type="tel" required>
+      </div>
+
+      <!-- 주소 -->
+      <div>
+        <label class="label">주소 *</label>
+        <div class="row-inline">
+          <input id="orderer_zip" name="orderer_zip" class="input" type="text" placeholder="우편번호" required>
+          <button type="button" class="btn btn-primary" id="btn-find-zip">주소 검색</button>
+        </div>
+        <input id="orderer_addr1" name="orderer_addr1" class="input" type="text" placeholder="기본주소" required style="margin-top:8px;">
+        <input id="orderer_addr2" name="orderer_addr2" class="input" type="text" placeholder="상세주소 (예: 14층)" style="margin-top:8px;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 보유 크레딧 이제야 크레딧우아아앙가 -->
+<section class="credit_section">
+  <div class="title">보유 크레딧</div>
+
+  <!-- E-cash -->
+  <div class="credit_item">
+    <div class="credit_header">
+      <span>💲E-cash</span>
+      <span class="credit_balance">보유금액: 50,000원</span>
+      <label class="credit_options">
+        <input type="checkbox" checked> 전체 사용
+      </label>
+    </div>
+    <div class="credit_input_area">
+      <input type="number" value="50000" />
+    </div>
+      <span class="credit_notice">* 마케팅 용품 포함시 E-cash 사용이 불가합니다.</span>
+  </div>
+
+  <!-- 포인트 -->
+  <div class="credit_item">
+    <div class="credit_header">
+      <span>🪙 포인트</span>
+      <span class="credit_balance">보유금액: 30,000원</span>
+      <label class="credit_options">
+        <input type="checkbox" checked> 전체 사용
+      </label>
+    </div>
+    <div class="credit_input_area">
+      <input type="number" value="30000" />
+    </div>
+  </div>
+</section>
+
+ <!-- 결제 요약 -->
+ <section class="payment-summary">
+  <h3 class="summary-title">결제 요약</h3>
+  <div class="summary">
+    <div class="summary-row">
+      <span>총 상품 금액</span>
+      <span class="summary_total">0원</span>
+    </div>
+    <div class="summary-row">
+      <span>크레딧 사용금</span>
+      <span class="summary_credit">0원</span>
+    </div>
+    <div class="summary-row">
+      <span>배송비</span>
+      <span class="summary_shipping">0원</span>
+    </div>
+    <div class="summary-final">
+      <span>최종 결제 금액</span>
+      <span class="summary_final">0원</span>
+    </div>
+  </div>
+</section>
+
+ <!-- 결제 수단 선택 -->
+<section class="payment-method">
+  <h3 class="payment-title">결제 수단</h3>
+ <div class="payment-grid">
+  <label class="payment-card">
+    <input type="radio" name="payment" id="od_settle_bank">
+    <div class="card-content">
+      <i class="fa-solid fa-building-columns"></i>
+      <span>무통장 입금</span>
+    </div>
+  </label>
+
+  <label class="payment-card">
+    <input type="radio" name="payment" id="od_settle_iche">
+    <div class="card-content">
+      <i class="fa-solid fa-landmark"></i>
+      <span>계좌이체</span>
+    </div>
+  </label>
+
+  <label class="payment-card">
+    <input type="radio" name="payment" id="od_settle_hp">
+    <div class="card-content">
+      <i class="fa-solid fa-mobile-screen-button"></i>
+      <span>휴대폰 결제</span>
+    </div>
+  </label>
+
+  <label class="payment-card">
+    <input type="radio" name="payment" id="od_settle_card">
+    <div class="card-content">
+      <i class="fa-solid fa-credit-card"></i>
+      <span>신용카드</span>
+    </div>
+  </label>
+</div>
+</section>
+
+
+<!-- 결제 하단 고정(결제하기, 총결제금) -->
+<div class="payment-footer">
+  <div class="footer-summary">
+    <span>총 결제금액</span>
+    <span class="footer-final">0원</span>
+  </div>
+  <button id="btn-pay" type="button" class="btn-pay">결제하기</button>
+</div>
+
+  </div>
+
+  <script>
+    // 전체 상품 보기 토글
+    const btn = document.getElementById('additional-products');
+    const list = document.getElementById('all-products');
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      list.style.display = expanded ? 'none' : 'block';
+
+      // 버튼 텍스트 토글
+      btn.querySelector('span').textContent = expanded ? '전체 상품 보기' : '접기';
+    });
+
+    // (선택) 총 주문금액 합산 = .td_numbig의 숫자만 추출해서 합계 표기되게 
+    function parsePrice(txt){ return Number((txt||'').replace(/[^\d]/g,'')||0); }
+    function updateTotal(){
+      const prices = [...document.querySelectorAll('#all-products .td_numbig')]
+        .map(el => parsePrice(el.textContent));
+      const total = prices.reduce((a,b)=>a+b,0);
+      document.querySelector('.total_amount').textContent =
+        total.toLocaleString('ko-KR') + '원';
+    }
+    updateTotal();
+
+
+
+     // 주문자& 배송지 동기화 
+  const $ = s => document.querySelector(s);
+  function setShipFields(data={}, lock=false){
+    ['#shipName','#shipMobile','#shipPostcode','#shipAddr1','#shipAddr2'].forEach((sel,i)=>{
+      const keys = ['name','mobile','postcode','addr1','addr2'];
+      const el = $(sel); if(!el) return;
+      el.value = data[keys[i]] || '';
+      el.disabled = lock;
+    });
+  }
+
+  // 초기값: 주문자와 동일
+  document.querySelector('input[name="shipType"][value="same"]').checked = true;
+
+  // 주문자 (팀장님  ID는 전부 샘플이라 수정해주세용..)
+  const getOrdererData = () => ({
+    name:     $('#orderer_name')?.value,
+    mobile:   $('#orderer_hp')?.value,
+    postcode: $('#orderer_zip')?.value,
+    addr1:    $('#orderer_addr1')?.value,
+    addr2:    $('#orderer_addr2')?.value
+  });
+
+  // 최근 배송지 예시 데이터 (사용자 히스토리로 교체 되어야함)
+  const recentShipping = {
+    name: '김지민', mobile:'010-9876-5432',
+    postcode:'06292', addr1:'서울 강남구 역삼로 123', addr2:'301호'
+  };
+
+  // 라디오 변경 시 동작
+  document.querySelectorAll('input[name="shipType"]').forEach(r=>{
+    r.addEventListener('change', e=>{
+      const v = e.target.value;
+      if(v==='same'){
+        setShipFields(getOrdererData(), true);
+      }else if(v==='recent'){
+        setShipFields(recentShipping, false);
+      }else{
+        setShipFields({}, false);
+      }
+    });
+  });
+
+  // 페이지 로드 시 한 번 적용
+  setShipFields(getOrdererData(), true);
+
+
+  // 모든 상품행 합계 계산(추가함)
+   const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const num = (t='') => parseInt(String(t).replace(/[^\d]/g,''), 10) || 0;
+  const fmt = (n=0) => n.toLocaleString('ko-KR') + '원';
+
+  function updateLineAndGrand() {
+    let grand = 0;
+
+    // 행 
+    const rows = $$('#all-products .product-row, #all-products .ui-product-row, #all-products .td_row');
+
+    rows.forEach(row => {
+      const qtyEl   = row.querySelector('.td_num');
+      const priceEl = row.querySelector('.td_numbig');
+      if (!qtyEl || !priceEl) return;
+
+      const qty   = num(qtyEl.textContent);       // "수량: 2개" → 2
+      const price = num(priceEl.textContent);     // "19,000원" → 19000
+      const line  = qty * price;
+      grand += line;
+
+      // 합계 표시
+      let totalEl = row.querySelector('.td_total');
+      if (!totalEl) {
+        totalEl = document.createElement('span');
+        totalEl.className = 'td_total';
+     
+        (row.querySelector('.meta') || row).appendChild(totalEl);
+      }
+      totalEl.textContent = fmt(line);
+    });
+
+    // 총 주문금액 갱신
+    const totalBox = document.querySelector('.total_amount');
+    if (totalBox) totalBox.textContent = fmt(grand);
+  }
+
+  // 최초 계산
+  updateLineAndGrand();
+document.querySelectorAll('.credit_item').forEach(item => {
+  const balanceEl = item.querySelector('.credit_balance');
+  const checkbox = item.querySelector('.credit_options input');
+  const input = item.querySelector('.credit_input_area input');
+
+  const balance = parseInt(balanceEl.textContent.replace(/[^\d]/g, ''), 10);
+
+  // 초기 세팅 (전체사용이면 보유금액 넣기)
+  if (checkbox.checked) {
+    input.value = balance;
+    input.readOnly = true;
+  }
+
+  // 체크박스 이벤트
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      input.value = balance;
+      input.readOnly = true;
+    } else {
+      input.readOnly = false;
+    }
+  });
+});
+
+function updateSummary() {
+  // 총 상품 금액 (total-card 값 가져오기)
+  const totalText = document.querySelector('.total-card').textContent.replace(/[^\d]/g, '');
+  const total = parseInt(totalText, 10) || 0;
+
+  // 크레딧 사용금 (2개 credit_input_area 합계)
+  const creditInputs = document.querySelectorAll('.credit_input_area');
+  let creditUsed = 0;
+  creditInputs.forEach(input => {
+    const val = parseInt(input.value.replace(/[^\d]/g, ''), 10) || 0;
+    creditUsed += val;
+  });
+
+  // 배송비 (10만원 이상 무료)
+  let shipping = total >= 100000 ? 0 : 3000;
+
+  // 최종 결제 금액
+  const finalAmount = Math.max(total - creditUsed + shipping, 0);
+
+  // DOM에 반영
+  document.querySelector('.summary_total').textContent = total.toLocaleString() + '원';
+  document.querySelector('.summary_credit').textContent = creditUsed.toLocaleString() + '원';
+  document.querySelector('.summary_shipping').textContent = shipping.toLocaleString() + '원';
+  document.querySelector('.summary_final').textContent = finalAmount.toLocaleString() + '원';
+}
+
+// 입력값 변경 시 즉시 반영
+document.querySelectorAll('.credit_input_area').forEach(input => {
+  input.addEventListener('input', updateSummary);
+});
+
+updateSummary();
+
+  </script>
+</body>
+</html>
